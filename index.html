@@ -709,6 +709,40 @@
 </svg>
 
 <script>
+const magicalPrefixes = [
+  "Elixir", 
+  "Poción", 
+  "Brebaje",
+  "Filtro",
+  "Tónico"
+];
+
+const magicalAdjectives = [
+  "Místico",
+  "Arcano",
+  "Etéreo",
+  "Celestial",
+  "Lunar",
+  "Solar",
+  "Crepuscular",
+  "Astral",
+  "Mágico",
+  "Encantado"
+];
+
+const magicalNouns = [
+  "del Crepúsculo",
+  "de la Aurora",
+  "de las Estrellas",
+  "de los Sueños",
+  "de la Luna",
+  "del Sol Naciente",
+  "de la Medianoche",
+  "del Amanecer",
+  "de las Hadas",
+  "del Hechicero"
+];
+
 document.addEventListener('DOMContentLoaded', function() {
   const loadingScreen = document.getElementById('loadingScreen');
   const progress = document.getElementById('loadingProgress');
@@ -996,12 +1030,56 @@ document.querySelectorAll('.filter-tag').forEach(tag => {
   });
 });
 
-window.onclick = function(event) {
-  const modal = document.getElementById('recipeModal');
-  if (event.target === modal) {
-    closeModal();
+// Add this function to handle section navigation
+function showSection(sectionName) {
+  // Get all sections
+  const sections = {
+    'recipes': document.getElementById('recipeContainer'),
+    'favorites': document.getElementById('recipeContainer'), // Will show filtered favorites
+    'create': document.getElementById('createPotionSection'),
+    'ingredient-finder': document.getElementById('ingredientFinderSection')
+  };
+  
+  // Get all navigation buttons
+  const navButtons = document.querySelectorAll('.nav-btn');
+  
+  // Remove active class from all buttons
+  navButtons.forEach(btn => btn.classList.remove('active'));
+  
+  // Add active class to clicked button
+  const activeButton = document.querySelector(`.nav-btn[onclick*="${sectionName}"]`);
+  if (activeButton) {
+    activeButton.classList.add('active');
+  }
+
+  // Hide all sections first
+  Object.values(sections).forEach(section => {
+    if (section) {
+      section.style.display = 'none';
+    }
+  });
+
+  // Show the selected section
+  const selectedSection = sections[sectionName];
+  if (selectedSection) {
+    selectedSection.style.display = 'block';
+    
+    // Special handling for favorites section
+    if (sectionName === 'favorites') {
+      // Filter and display only favorite recipes
+      const favoriteRecipes = recipes.filter(recipe => favorites.includes(recipe.name));
+      displayRecipes(favoriteRecipes);
+    } else if (sectionName === 'recipes') {
+      // Show all recipes for the main recipes section
+      displayRecipes(recipes);
+    }
   }
 }
+
+// Call this when the page loads to show the initial section
+document.addEventListener('DOMContentLoaded', function() {
+  showSection('recipes'); // Show recipes section by default
+});
 
 // Setup autocomplete functionality
 setupIngredientAutocomplete();
@@ -1116,7 +1194,7 @@ function setupIngredientAutocomplete() {
 // Mostrar recetas iniciales
 displayRecipes();
 
-// Add this function after the other functions in the script section
+// Modify the requestAIRecommendation function
 function requestAIRecommendation() {
   // Show loading animation
   const loadingScreen = document.createElement('div');
@@ -1181,8 +1259,15 @@ function requestAIRecommendation() {
       'Evoca brisas místicas'
     ];
     
+    const generateMagicalName = () => {
+      const prefix = magicalPrefixes[Math.floor(Math.random() * magicalPrefixes.length)];
+      const adjective = magicalAdjectives[Math.floor(Math.random() * magicalAdjectives.length)];
+      const noun = magicalNouns[Math.floor(Math.random() * magicalNouns.length)];
+      return `${prefix} ${adjective} ${noun}`;
+    };
+
     const newRecipe = {
-      name: `Brebaje ${Math.random().toString(36).substring(7)}`,
+      name: generateMagicalName(),
       ingredients: ingredients,
       instructions: `Combinar ${ingredients[0]} con ${ingredients[1]} en una copa helada. Agregar ${ingredients[2]} y remover suavemente. Decorar con ${ingredients[3]}.`,
       difficulty: difficulties[Math.floor(Math.random() * difficulties.length)],
