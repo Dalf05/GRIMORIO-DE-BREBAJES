@@ -1,0 +1,1204 @@
+<html><head><base href="/">
+<meta charset="UTF-8">
+<title>Grimorio de Brebajes Místicos</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=MedievalSharp&family=Crimson+Pro:wght@400;600&family=UnifrakturMaguntia&display=swap');
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    background: #2c1810;
+    background-image: 
+      linear-gradient(rgba(44, 24, 16, 0.9), rgba(44, 24, 16, 0.9)),
+      url('https://www.transparenttextures.com/patterns/old-map.png');
+    font-family: 'Crimson Pro', serif;
+    color: #2c1810;
+    padding: 40px;
+    min-height: 100vh;
+  }
+
+  .grimoire {
+    max-width: 1200px;
+    margin: 0 auto;
+    background: #e8d5b5; /* Base beige color */
+    background-image: 
+      linear-gradient(rgba(232, 213, 181, 0.95), rgba(232, 213, 181, 0.95)),
+      url('https://www.transparenttextures.com/patterns/old-paper.png');
+    /* Add burned edges effect using multiple box-shadows */
+    box-shadow: 
+      0 0 50px rgba(139, 69, 19, 0.5),
+      inset 0 0 30px rgba(139, 69, 19, 0.4),
+      inset 0 0 100px rgba(58, 29, 8, 0.2);
+    padding: 60px;
+    position: relative;
+  }
+
+  h1 {
+    font-family: 'UnifrakturMaguntia', cursive;
+    font-size: 4em;
+    text-align: center;
+    color: #8b4513;
+    margin-bottom: 40px;
+    text-shadow: 3px 3px 6px rgba(0,0,0,0.2);
+    letter-spacing: 2px;
+  }
+
+  .search-container {
+    margin-bottom: 40px;
+    text-align: center;
+    background: rgba(139, 69, 19, 0.15);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 
+      inset 0 0 20px rgba(139, 69, 19, 0.2),
+      0 5px 15px rgba(0,0,0,0.1);
+  }
+
+  input {
+    padding: 15px 25px;
+    font-family: 'Crimson Pro', serif;
+    font-size: 1.2em;
+    border: 2px solid #8b4513;
+    background: #e8d5b5;
+    box-shadow: 
+      inset 0 0 10px rgba(139, 69, 19, 0.2);
+    width: 400px;
+    border-radius: 5px;
+    margin-right: 10px;
+    transition: all 0.3s ease;
+  }
+
+  input:focus {
+    outline: none;
+    box-shadow: 0 0 10px rgba(139, 69, 19, 0.3);
+  }
+
+  button {
+    padding: 15px 30px;
+    font-family: 'MedievalSharp', cursive;
+    font-size: 1.1em;
+    background: #8b4513;
+    color: #fff5e6;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin: 0 5px;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+  }
+
+  button:hover {
+    background: #654321;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 10px rgba(0,0,0,0.3);
+  }
+
+  .filter-tags {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+
+  .filter-tag {
+    background: #8b4513;
+    color: #fff5e6;
+    padding: 8px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: 'MedievalSharp', cursive;
+  }
+
+  .filter-tag:hover {
+    background: #654321;
+    transform: scale(1.05);
+  }
+
+  .filter-tag.active {
+    background: #2c1810;
+    box-shadow: 0 0 10px rgba(139, 69, 19, 0.5);
+  }
+
+  .recipe-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 40px;
+  }
+
+  .recipe {
+    position: relative; /* Ensure this is set */
+    background: #e8d5b5;
+    background-image: 
+      linear-gradient(rgba(232, 213, 181, 0.97), rgba(232, 213, 181, 0.97)),
+      url('https://www.transparenttextures.com/patterns/old-paper.png');
+    border: none; /* Remove the border */
+    /* Add burned paper effect */
+    box-shadow: 
+      0 5px 15px rgba(0,0,0,0.2),
+      inset 0 0 20px rgba(139, 69, 19, 0.3);
+    position: relative;
+    overflow: hidden;
+    padding: 30px;
+    transition: all 0.3s ease;
+  }
+
+  .delete-btn {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: none;
+    border: none;
+    font-size: 1.2em;
+    cursor: pointer;
+    color: #8b4513;
+    padding: 5px;
+    z-index: 1;
+    transition: all 0.3s ease;
+  }
+
+  .delete-btn:hover {
+    transform: scale(1.2);
+    color: #ff0000;
+  }
+
+  .recipe::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+      radial-gradient(circle at 20% 20%, rgba(184, 135, 95, 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 80% 80%, rgba(139, 69, 19, 0.1) 0%, transparent 50%);
+    pointer-events: none;
+  }
+
+  .recipe:hover {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 10px 25px rgba(139, 69, 19, 0.2);
+  }
+
+  .recipe h2 {
+    font-family: 'MedievalSharp', cursive;
+    color: #8b4513;
+    margin-bottom: 20px;
+    font-size: 1.8em;
+    border-bottom: 2px solid rgba(139, 69, 19, 0.3);
+    padding-bottom: 10px;
+  }
+
+  .ingredients {
+    list-style: none;
+    margin-bottom: 20px;
+  }
+
+  .ingredients li {
+    padding: 8px 0;
+    font-size: 1.1em;
+  }
+
+  .ingredients li::before {
+    content: "✦";
+    color: #8b4513;
+    margin-right: 10px;
+    font-size: 1.2em;
+  }
+
+  .favorite-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 1.5em;
+    cursor: pointer;
+    color: #8b4513;
+    padding: 5px;
+  }
+
+  .favorite-btn:hover {
+    transform: scale(1.2);
+  }
+
+  .recipe-count {
+    text-align: center;
+    margin-bottom: 20px;
+    font-family: 'MedievalSharp', cursive;
+    color: #8b4513;
+  }
+
+  .modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+
+  .modal-content {
+    background: #fff5e6;
+    padding: 30px;
+    border-radius: 10px;
+    max-width: 500px;
+    width: 90%;
+    position: relative;
+    border: 3px solid #8b4513;
+  }
+
+  .close-modal {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 1.5em;
+    cursor: pointer;
+    color: #8b4513;
+  }
+
+  .sorting-container {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .sorting-container select {
+    padding: 10px;
+    font-family: 'Crimson Pro', serif;
+    border: 2px solid #8b4513;
+    background: #fff5e6;
+    border-radius: 5px;
+    margin-left: 10px;
+  }
+
+  .potion-icon {
+    width: 70px;
+    height: 70px;
+    position: absolute;
+    top: -35px;
+    right: -35px;
+    filter: drop-shadow(0 3px 5px rgba(0,0,0,0.2));
+  }
+
+  .potion-animation {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 120px;
+    height: 120px;
+    animation: bubble 3s infinite ease-in-out;
+    filter: drop-shadow(0 0 10px rgba(139, 69, 19, 0.5));
+  }
+
+  @keyframes bubble {
+    0% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-25px) rotate(5deg); }
+    100% { transform: translateY(0) rotate(0deg); }
+  }
+
+  p {
+    margin: 10px 0;
+    line-height: 1.6;
+    font-size: 1.1em;
+  }
+
+  strong {
+    color: #8b4513;
+  }
+
+  /* Add these new styles */
+  .navigation-menu {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+  }
+
+  .nav-btn {
+    padding: 12px 25px;
+    font-family: 'MedievalSharp', cursive;
+    font-size: 1.1em;
+    background: #8b4513;
+    color: #fff5e6;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .nav-btn.active {
+    background: #2c1810;
+    box-shadow: 0 0 15px rgba(139, 69, 19, 0.5);
+  }
+
+  .section-container {
+    background: rgba(255, 245, 230, 0.9);
+    padding: 30px;
+    border-radius: 10px;
+    margin-top: 20px;
+  }
+
+  .create-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .ingredient-input {
+    display: flex;
+    gap: 10px;
+  }
+
+  .small-btn {
+    padding: 5px 10px;
+    font-size: 1em;
+  }
+
+  .create-btn {
+    margin-top: 20px;
+    padding: 15px;
+    font-size: 1.2em;
+  }
+
+  .ingredient-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 15px;
+  }
+
+  .ingredient-tag {
+    background: #8b4513;
+    color: #fff5e6;
+    padding: 5px 15px;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .ingredient-tag button {
+    background: none;
+    border: none;
+    color: #fff5e6;
+    cursor: pointer;
+    padding: 0 5px;
+  }
+
+  .section-title {
+    font-family: 'MedievalSharp', cursive;
+    color: #8b4513;
+    text-align: center;
+    margin-bottom: 25px;
+    font-size: 2em;
+  }
+
+  .autocomplete-items {
+    position: absolute;
+    border: 1px solid #8b4513;
+    border-radius: 5px;
+    z-index: 99;
+    top: 100%;
+    left: 0;
+    right: 0;
+    max-height: 200px;
+    overflow-y: auto;
+    background: #e8d5b5;
+  }
+
+  .autocomplete-items div {
+    padding: 10px;
+    cursor: pointer;
+    font-family: 'Crimson Pro', serif;
+  }
+
+  .autocomplete-items div:hover {
+    background-color: rgba(139, 69, 19, 0.2);
+  }
+
+  .ingredient-finder {
+    position: relative;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  /* Loading Animation Styles */
+  .loading-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #2c1810;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+  }
+
+  .cauldron-container {
+    width: 200px;
+    height: 200px;
+    position: relative;
+  }
+
+  .loading-text {
+    font-family: 'UnifrakturMaguntia', cursive;
+    color: #e8d5b5;
+    font-size: 2em;
+    margin-top: 20px;
+    opacity: 0;
+    animation: fadeInOut 2s infinite;
+  }
+
+  .progress-bar {
+    width: 200px;
+    height: 4px;
+    background: rgba(232, 213, 181, 0.2);
+    border-radius: 2px;
+    margin-top: 20px;
+  }
+
+  .progress {
+    width: 0%;
+    height: 100%;
+    background: #8b4513;
+    border-radius: 2px;
+    transition: width 6s ease-in-out;
+  }
+
+  @keyframes fadeInOut {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 1; }
+  }
+
+  @keyframes bubble {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+  }
+
+  .hide-loading {
+    opacity: 0;
+    transition: opacity 0.5s ease-out;
+    pointer-events: none;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .loading-screen .nav-btn {
+    background: #8b4513;
+    color: #fff5e6;
+    border: none;
+    padding: 15px 30px;
+    font-size: 1.2em;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 20px rgba(139, 69, 19, 0.3);
+  }
+
+  .loading-screen .nav-btn:hover {
+    background: #654321;
+    transform: scale(1.05);
+    box-shadow: 0 0 30px rgba(139, 69, 19, 0.5);
+  }
+</style>
+</head>
+<body>
+
+<div class="loading-screen" id="loadingScreen">
+  <div class="cauldron-container">
+    <svg viewBox="0 0 100 100">
+      <!-- Background magic circles -->
+      <circle cx="50" cy="50" r="20" fill="none" stroke="#8b4513" stroke-width="0.5" opacity="0.3">
+        <animate attributeName="r" dur="3s" values="20;25;20" repeatCount="indefinite"/>
+        <animate attributeName="opacity" dur="3s" values="0.3;0.1;0.3" repeatCount="indefinite"/>
+      </circle>
+      
+      <!-- Falling ingredients -->
+      <circle cx="30" cy="-10" r="2" fill="#f4d03f">
+        <animate attributeName="cy" dur="2s" values="-10;40" repeatCount="indefinite"/>
+        <animate attributeName="opacity" dur="2s" values="1;0" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="50" cy="-5" r="2" fill="#2ecc71">
+        <animate attributeName="cy" dur="1.5s" values="-5;40" repeatCount="indefinite"/>
+        <animate attributeName="opacity" dur="1.5s" values="1;0" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="70" cy="-15" r="2" fill="#e74c3c">
+        <animate attributeName="cy" dur="2.5s" values="-15;40" repeatCount="indefinite"/>
+        <animate attributeName="opacity" dur="2.5s" values="1;0" repeatCount="indefinite"/>
+      </circle>
+      
+      <!-- Cauldron body -->
+      <path d="M20,40 C20,20 80,20 80,40 L85,70 C85,80 15,80 15,70 Z" fill="#4a4a4a">
+        <animate attributeName="d" 
+                 dur="1s" 
+                 repeatCount="indefinite"
+                 values="M20,40 C20,20 80,20 80,40 L85,70 C85,80 15,80 15,70 Z;
+                        M20,42 C20,22 80,22 80,42 L85,72 C85,82 15,82 15,72 Z;
+                        M20,40 C20,20 80,20 80,40 L85,70 C85,80 15,80 15,70 Z"/>
+      </path>
+      
+      <!-- Legs -->
+      <path d="M25,70 L20,85 M75,70 L80,85" stroke="#2c1810" stroke-width="3" fill="none"/>
+      
+      <!-- Purple potion liquid with better animation -->
+      <path d="M25,45 C25,35 75,35 75,45" fill="none" stroke="#9b59b6" stroke-width="4" opacity="0.8">
+        <animate attributeName="d" 
+                 dur="0.8s" 
+                 repeatCount="indefinite"
+                 values="M25,45 C35,42 65,42 75,45;
+                        M25,43 C35,46 65,46 75,43;
+                        M25,45 C35,42 65,42 75,45"/>
+      </path>
+      
+      <!-- Magic sparkles -->
+      <circle cx="40" cy="40" r="1" fill="#fff">
+        <animate attributeName="opacity" dur="0.8s" values="1;0;1" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="60" cy="38" r="1" fill="#fff">
+        <animate attributeName="opacity" dur="1s" values="0;1;0" repeatCount="indefinite"/>
+      </circle>
+      
+      <!-- Bubbles with purple glow -->
+      <circle cx="40" cy="40" r="2" fill="#9b59b6" filter="url(#bubble-glow)">
+        <animate attributeName="cy" dur="2s" values="45;35;45" repeatCount="indefinite"/>
+        <animate attributeName="r" dur="2s" values="2;3;2" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="50" cy="38" r="2" fill="#9b59b6" filter="url(#bubble-glow)">
+        <animate attributeName="cy" dur="1.5s" values="45;33;45" repeatCount="indefinite"/>
+        <animate attributeName="r" dur="1.5s" values="2;4;2" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="60" cy="42" r="2" fill="#9b59b6" filter="url(#bubble-glow)">
+        <animate attributeName="cy" dur="1.8s" values="45;37;45" repeatCount="indefinite"/>
+        <animate attributeName="r" dur="1.8s" values="2;3;2" repeatCount="indefinite"/>
+      </circle>
+      
+      <!-- Define glow effect -->
+      <defs>
+        <filter id="bubble-glow">
+          <feGaussianBlur stdDeviation="1" result="glow"/>
+          <feMerge>
+            <feMergeNode in="glow"/>
+            <feMergeNode in="SourceGraphic"/>
+          </feMerge>
+        </filter>
+      </defs>
+    </svg>
+  </div>
+  <div class="loading-text">Preparando el Grimorio...</div>
+  <div class="progress-bar">
+    <div class="progress" id="loadingProgress"></div>
+  </div>
+</div>
+
+<div class="grimoire">
+  <h1>Grimorio de Brebajes Místicos</h1>
+  
+  <div class="search-container">
+    <input type="text" id="searchInput" placeholder="Busca tu pócima...">
+    <button onclick="searchRecipes()">Buscar</button>
+    <button onclick="requestAIRecommendation()">Solicitar recomendación mágica</button>
+  </div>
+
+  <div class="navigation-menu">
+    <button onclick="showSection('recipes')" class="nav-btn active">Brebajes Clásicos</button>
+    <button onclick="showSection('favorites')" class="nav-btn">Favoritos</button>
+    <button onclick="showSection('create')" class="nav-btn">Crear Brebaje</button>
+    <button onclick="showSection('ingredient-finder')" class="nav-btn">Buscador por Ingredientes</button>
+  </div>
+
+  <div class="filter-tags" id="filterTags">
+    <span class="filter-tag" data-difficulty="Simple">Simple</span>
+    <span class="filter-tag" data-difficulty="Moderado">Moderado</span>
+    <span class="filter-tag" data-difficulty="Avanzado">Avanzado</span>
+  </div>
+
+  <div class="sorting-container">
+    <label for="sortSelect">Ordenar por:</label>
+    <select id="sortSelect" onchange="sortRecipes()">
+      <option value="name">Nombre</option>
+      <option value="difficulty">Dificultad</option>
+      <option value="random">Aleatorio</option>
+    </select>
+  </div>
+
+  <div class="recipe-count" id="recipeCount"></div>
+
+  <div class="recipe-container" id="recipeContainer">
+    <!-- Las recetas se generarán dinámicamente -->
+  </div>
+
+  <div id="createPotionSection" class="section-container" style="display: none;">
+    <h2 class="section-title">Crea tu Propio Brebaje Mágico</h2>
+    <div class="create-form">
+      <input type="text" id="potionName" placeholder="Nombre de tu brebaje">
+      <div id="ingredientsList">
+        <div class="ingredient-input">
+          <input type="text" placeholder="Ingrediente">
+          <input type="text" placeholder="Cantidad">
+          <button onclick="addIngredientField()" class="small-btn">+</button>
+        </div>
+      </div>
+      <textarea id="potionInstructions" placeholder="Instrucciones de preparación"></textarea>
+      <select id="potionDifficulty">
+        <option value="Simple">Simple</option>
+        <option value="Moderado">Moderado</option>
+        <option value="Avanzado">Avanzado</option>
+      </select>
+      <input type="text" id="potionEffect" placeholder="Efecto mágico">
+      <button onclick="saveCustomPotion()" class="create-btn">Crear Brebaje</button>
+    </div>
+  </div>
+
+  <div id="ingredientFinderSection" class="section-container" style="display: none;">
+    <h2 class="section-title">Buscador por Ingredientes</h2>
+    <div class="ingredient-finder">
+      <div class="ingredient-tags" id="ingredientTags"></div>
+      <input type="text" id="ingredientInput" placeholder="Añade tus ingredientes...">
+      <button onclick="addIngredientTag()">Añadir</button>
+      <button onclick="findPotionsByIngredients()" class="main-btn">Buscar Brebajes Posibles</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="recipeModal">
+  <div class="modal-content">
+    <span class="close-modal" onclick="closeModal()">&times;</span>
+    <div id="modalContent"></div>
+  </div>
+</div>
+
+<svg class="potion-animation" viewBox="0 0 100 100">
+  <defs>
+    <radialGradient id="bubbleGrad" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
+      <stop offset="0%" style="stop-color:rgb(255,255,255);stop-opacity:0.9"/>
+      <stop offset="100%" style="stop-color:rgb(139,69,19);stop-opacity:0.6"/>
+    </radialGradient>
+  </defs>
+  <path d="M30,70 Q50,40 70,70 Q60,80 50,75 Q40,80 30,70" fill="url(#bubbleGrad)">
+    <animate attributeName="d" 
+             dur="3s" 
+             repeatCount="indefinite"
+             values="M30,70 Q50,40 70,70 Q60,80 50,75 Q40,80 30,70;
+                     M30,65 Q50,45 70,65 Q60,75 50,70 Q40,75 30,65;
+                     M30,70 Q50,40 70,70 Q60,80 50,75 Q40,80 30,70"/>
+  </path>
+</svg>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const loadingScreen = document.getElementById('loadingScreen');
+  const progress = document.getElementById('loadingProgress');
+  const grimoire = document.querySelector('.grimoire');
+  
+  // Hide the main content initially
+  grimoire.style.opacity = '0';
+  grimoire.style.transition = 'opacity 0.5s ease-in';
+  
+  // After a shorter delay, show the start button
+  setTimeout(() => {
+    const loadingText = document.querySelector('.loading-text');
+    loadingText.style.animation = 'none';
+    loadingText.style.opacity = '1';
+    loadingText.textContent = '¡El Grimorio está listo!';
+    
+    // Create and add the start button
+    const startButton = document.createElement('button');
+    startButton.className = 'nav-btn';
+    startButton.style.marginTop = '30px';
+    startButton.style.animation = 'fadeIn 0.5s ease-in';
+    startButton.textContent = '✨ Preparar Brebajes ✨';
+    startButton.onclick = () => {
+      // Fade out loading screen
+      loadingScreen.classList.add('hide-loading');
+      // Fade in main content
+      grimoire.style.opacity = '1';
+      // Remove loading screen after fade
+      setTimeout(() => {
+        loadingScreen.remove();
+      }, 500);
+    };
+    loadingScreen.appendChild(startButton);
+  }, 3000); // Reduced from 6000 to 3000 milliseconds
+  
+  // Start progress animation (now independent of button appearance)
+  setTimeout(() => {
+    progress.style.width = '100%';
+  }, 100);
+});
+
+// Update the recipes array with better proportions
+let favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+
+const recipes = [
+  {
+    name: "Moscow Mule Místico",
+    ingredients: [
+      "45ml Vodka",
+      "15ml Zumo de lima fresco",
+      "120ml Ginger beer",
+      "2-3 Hojas de menta para decorar",
+      "1 Rodaja de lima"
+    ],
+    instructions: "En un vaso de cobre con hielo, verter el vodka y zumo de lima. Rellenar con ginger beer. Remover suavemente. Decorar con hojas de menta y rodaja de lima.",
+    difficulty: "Simple",
+    effect: "Brilla con destellos cobrizos"
+  },
+  {
+    name: "Margarita Encantada",
+    ingredients: [
+      "45ml Tequila 100% agave",
+      "30ml Triple sec",
+      "30ml Zumo de lima fresco",
+      "1 Cucharada de sal de mar para el borde",
+      "1 Rodaja de lima"
+    ],
+    instructions: "Escarchar el borde del vaso con sal. En una coctelera con hielo, mezclar tequila, triple sec y zumo de lima. Agitar enérgicamente durante 10-12 segundos. Colar en copa previamente enfriada. Decorar con rodaja de lima.",
+    difficulty: "Moderado",
+    effect: "Emite un suave resplandor dorado"
+  },
+  {
+    name: "Mojito Mágico",
+    ingredients: [
+      "45ml Ron blanco",
+      "30ml Zumo de lima fresco",
+      "15ml Jarabe de azúcar simple",
+      "8-10 Hojas de menta frescas",
+      "120ml Agua con gas",
+      "2 Rodajas de lima"
+    ],
+    instructions: "En un vaso alto, machacar suavemente las hojas de menta con el jarabe de azúcar. Añadir el ron, zumo de lima y hielo. Completar con agua con gas y remover suavemente. Decorar con hojas de menta y rodajas de lima.",
+    difficulty: "Simple",
+    effect: "Las burbujas flotan mágicamente"
+  },
+  {
+    name: "Negroni Místico",
+    ingredients: [
+      "30ml Ginebra London Dry",
+      "30ml Vermut rojo",
+      "30ml Campari",
+      "1 Rodaja de naranja",
+      "2 Gotas de bitter de angostura"
+    ],
+    instructions: "En un vaso bajo con un cubo grande de hielo, verter la ginebra, vermut y Campari. Remover durante 30 segundos hasta que esté bien frío. Decorar con rodaja de naranja y un toque de bitter.",
+    difficulty: "Avanzado",
+    effect: "Cambia de color al remover"
+  },
+  {
+    name: "Piña Colada Encantada",
+    ingredients: [
+      "45ml Ron blanco",
+      "90ml Zumo de piña natural",
+      "30ml Crema de coco",
+      "15ml Jarabe de azúcar simple",
+      "1 Rodaja de piña fresca",
+      "1 Cereza al marrasquino"
+    ],
+    instructions: "En una licuadora con 2 tazas de hielo picado, mezclar ron, zumo de piña, crema de coco y jarabe hasta obtener una textura suave y cremosa (aproximadamente 20 segundos). Servir en vaso alto y decorar con piña fresca y cereza.",
+    difficulty: "Moderado",
+    effect: "Evoca brisas tropicales mágicas"
+  }
+];
+
+// Update the getRandomIngredients function to use better proportions
+const getRandomIngredients = () => {
+  const bases = ['45ml Vodka', '45ml Ginebra', '45ml Ron blanco', '45ml Ron oscuro', '45ml Whisky', '45ml Tequila'];
+  const mixers = [
+    '30ml Zumo de limón fresco', 
+    '30ml Zumo de naranja fresco', 
+    '90ml Zumo de piña natural', 
+    '120ml Agua con gas', 
+    '120ml Cola',
+    '120ml Ginger ale',
+    '120ml Tónica',
+    '120ml Ginger beer'
+  ];
+  const additives = [
+    '15ml Triple sec',
+    '15ml Cointreau',
+    '30ml Vermut rojo',
+    '15ml Licor de café',
+    '15ml Amaretto',
+    '15ml Jarabe de azúcar simple'
+  ];
+  const garnishes = [
+    '1 Rodaja de limón',
+    '2 Rodajas de lima',
+    '1 Rodaja de naranja',
+    '6-8 Hojas de menta frescas',
+    '1 Cereza al marrasquino'
+  ];
+
+  return [
+    randomElement(bases),
+    randomElement(mixers),
+    randomElement(additives),
+    randomElement(garnishes)
+  ];
+};
+
+const randomElement = arr => arr[Math.floor(Math.random() * arr.length)];
+
+function displayRecipes(recipesToShow = recipes) {
+  const container = document.getElementById('recipeContainer');
+  container.innerHTML = '';
+  
+  document.getElementById('recipeCount').textContent = 
+    `Mostrando ${recipesToShow.length} brebajes místicos`;
+  
+  recipesToShow.forEach(recipe => {
+    const recipeElement = document.createElement('div');
+    recipeElement.className = 'recipe';
+    const isFavorite = favorites.includes(recipe.name);
+    
+    recipeElement.innerHTML = `
+      <button class="delete-btn" onclick="deleteRecipe('${recipe.name}')" title="Eliminar brebaje">
+        🗑️
+      </button>
+      <button class="favorite-btn" onclick="toggleFavorite('${recipe.name}')">
+        ${isFavorite ? '❤️' : '🤍'}
+      </button>
+      <svg class="potion-icon" viewBox="0 0 50 50">
+        <path d="M20,10 V20 Q25,25 30,20 V10 H20" fill="#8b4513"/>
+        <circle cx="25" cy="15" r="2" fill="#f4d03f"/>
+      </svg>
+      <h2>${recipe.name}</h2>
+      <ul class="ingredients">
+        ${recipe.ingredients.map(ing => `<li>${ing}</li>`).join('')}
+      </ul>
+      <p><strong>Instrucciones:</strong> ${recipe.instructions}</p>
+      <p><strong>Dificultad:</strong> ${recipe.difficulty}</p>
+      <p><strong>Efecto Mágico:</strong> ${recipe.effect}</p>
+    `;
+    
+    recipeElement.addEventListener('click', () => showRecipeModal(recipe));
+    container.appendChild(recipeElement);
+  });
+}
+
+function deleteRecipe(recipeName) {
+  event.stopPropagation();
+  
+  if (confirm('¿Estás seguro de que quieres eliminar este brebaje?')) {
+    // Remove from recipes array
+    const index = recipes.findIndex(recipe => recipe.name === recipeName);
+    if (index !== -1) {
+      recipes.splice(index, 1);
+    }
+    
+    // Also remove from favorites if it exists there
+    if (favorites.includes(recipeName)) {
+      favorites = favorites.filter(name => name !== recipeName);
+      localStorage.setItem('favorites', JSON.stringify(favorites));
+    }
+    
+    // Refresh the display
+    displayRecipes(filterRecipes());
+  }
+}
+
+function toggleFavorite(recipeName) {
+  event.stopPropagation();
+  if (favorites.includes(recipeName)) {
+    favorites = favorites.filter(name => name !== recipeName);
+  } else {
+    favorites.push(recipeName);
+  }
+  localStorage.setItem('favorites', JSON.stringify(favorites));
+  displayRecipes(filterRecipes());
+}
+
+function showRecipeModal(recipe) {
+  const modal = document.getElementById('recipeModal');
+  const content = document.getElementById('modalContent');
+  content.innerHTML = `
+    <h2>${recipe.name}</h2>
+    <h3>Ingredientes:</h3>
+    <ul>${recipe.ingredients.map(ing => `<li>${ing}</li>`).join('')}</ul>
+    <p><strong>Instrucciones:</strong> ${recipe.instructions}</p>
+    <p><strong>Dificultad:</strong> ${recipe.difficulty}</p>
+    <p><strong>Efecto Mágico:</strong> ${recipe.effect}</p>
+  `;
+  modal.style.display = 'flex';
+}
+
+function closeModal() {
+  document.getElementById('recipeModal').style.display = 'none';
+}
+
+function sortRecipes() {
+  const sortMethod = document.getElementById('sortSelect').value;
+  let sortedRecipes = [...recipes];
+  
+  switch(sortMethod) {
+    case 'name':
+      sortedRecipes.sort((a, b) => a.name.localeCompare(b.name));
+      break;
+    case 'difficulty':
+      const difficultyOrder = { 'Simple': 1, 'Moderado': 2, 'Avanzado': 3 };
+      sortedRecipes.sort((a, b) => difficultyOrder[a.difficulty] - difficultyOrder[b.difficulty]);
+      break;
+    case 'random':
+      sortedRecipes.sort(() => Math.random() - 0.5);
+      break;
+  }
+  
+  displayRecipes(filterRecipes(sortedRecipes));
+}
+
+function filterRecipes(recipesToFilter = recipes) {
+  const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+  
+  return recipesToFilter.filter(recipe => {
+    const matchesSearch = recipe.name.toLowerCase().includes(searchTerm) ||
+                         recipe.ingredients.some(ing => ing.toLowerCase().includes(searchTerm));
+    const matchesDifficulty = activeFilters.size === 0 || activeFilters.has(recipe.difficulty);
+    return matchesSearch && matchesDifficulty;
+  });
+}
+
+let activeFilters = new Set();
+
+document.querySelectorAll('.filter-tag').forEach(tag => {
+  tag.addEventListener('click', () => {
+    const difficulty = tag.dataset.difficulty;
+    if (activeFilters.has(difficulty)) {
+      activeFilters.delete(difficulty);
+      tag.classList.remove('active');
+    } else {
+      activeFilters.add(difficulty);
+      tag.classList.add('active');
+    }
+    displayRecipes(filterRecipes());
+  });
+});
+
+window.onclick = function(event) {
+  const modal = document.getElementById('recipeModal');
+  if (event.target === modal) {
+    closeModal();
+  }
+}
+
+// Setup autocomplete functionality
+setupIngredientAutocomplete();
+
+function setupIngredientAutocomplete() {
+  const ingredientInput = document.getElementById('ingredientInput');
+  if (!ingredientInput) return;
+
+  // Common cocktail ingredients for autocomplete
+  const commonIngredients = [
+    'Vodka',
+    'Ginebra',
+    'Ron blanco',
+    'Ron oscuro',
+    'Whisky',
+    'Tequila',
+    'Triple sec',
+    'Cointreau',
+    'Vermut rojo',
+    'Vermut blanco',
+    'Campari',
+    'Zumo de limón',
+    'Zumo de lima',
+    'Zumo de naranja',
+    'Zumo de piña',
+    'Ginger beer',
+    'Agua con gas',
+    'Tónica',
+    'Cola',
+    'Crema de coco',
+    'Licor de café',
+    'Licor de menta',
+    'Jarabe de azúcar',
+    'Angostura bitters',
+    'Hojas de menta',
+    'Rodajas de limón',
+    'Rodajas de lima',
+    'Rodajas de naranja',
+    'Cerezas al marrasquino'
+  ];
+
+  let currentFocus;
+  const autocompleteWrapper = document.createElement('div');
+  autocompleteWrapper.setAttribute('class', 'autocomplete-items');
+  ingredientInput.parentNode.appendChild(autocompleteWrapper);
+
+  ingredientInput.addEventListener('input', function(e) {
+    const val = this.value;
+    closeAllLists();
+    if (!val) return false;
+    currentFocus = -1;
+
+    const matchingIngredients = commonIngredients.filter(ingredient => 
+      ingredient.toLowerCase().includes(val.toLowerCase())
+    );
+
+    matchingIngredients.forEach(ingredient => {
+      const item = document.createElement('div');
+      item.innerHTML = ingredient.replace(new RegExp(val, 'gi'), match => `<strong>${match}</strong>`);
+      item.addEventListener('click', function(e) {
+        ingredientInput.value = ingredient;
+        closeAllLists();
+      });
+      autocompleteWrapper.appendChild(item);
+    });
+  });
+
+  ingredientInput.addEventListener('keydown', function(e) {
+    const items = autocompleteWrapper.getElementsByTagName('div');
+    if (e.keyCode === 40) { // arrow DOWN
+      currentFocus++;
+      addActive(items);
+    } else if (e.keyCode === 38) { // arrow UP
+      currentFocus--;
+      addActive(items);
+    } else if (e.keyCode === 13) { // ENTER
+      e.preventDefault();
+      if (currentFocus > -1 && items[currentFocus]) {
+        items[currentFocus].click();
+      }
+    }
+  });
+
+  function addActive(items) {
+    if (!items) return false;
+    removeActive(items);
+    if (currentFocus >= items.length) currentFocus = 0;
+    if (currentFocus < 0) currentFocus = (items.length - 1);
+    items[currentFocus].classList.add('autocomplete-active');
+  }
+
+  function removeActive(items) {
+    Array.from(items).forEach(item => {
+      item.classList.remove('autocomplete-active');
+    });
+  }
+
+  function closeAllLists(elmnt) {
+    const items = document.getElementsByClassName('autocomplete-items');
+    Array.from(items).forEach(item => {
+      if (elmnt !== item && elmnt !== ingredientInput) {
+        item.parentNode.removeChild(item);
+      }
+    });
+  }
+
+  document.addEventListener('click', function(e) {
+    closeAllLists(e.target);
+  });
+}
+
+// Mostrar recetas iniciales
+displayRecipes();
+
+// Add this function after the other functions in the script section
+function requestAIRecommendation() {
+  // Show loading animation
+  const loadingScreen = document.createElement('div');
+  loadingScreen.className = 'loading-screen';
+  loadingScreen.innerHTML = `
+    <div class="cauldron-container">
+      <svg viewBox="0 0 100 100">
+        <!-- Background magic circles -->
+        <circle cx="50" cy="50" r="20" fill="none" stroke="#8b4513" stroke-width="0.5" opacity="0.3">
+          <animate attributeName="r" dur="3s" values="20;25;20" repeatCount="indefinite"/>
+          <animate attributeName="opacity" dur="3s" values="0.3;0.1;0.3" repeatCount="indefinite"/>
+        </circle>
+        
+        <!-- Falling ingredients -->
+        <circle cx="30" cy="-10" r="2" fill="#f4d03f">
+          <animate attributeName="cy" dur="2s" values="-10;40" repeatCount="indefinite"/>
+          <animate attributeName="opacity" dur="2s" values="1;0" repeatCount="indefinite"/>
+        </circle>
+        <circle cx="50" cy="-5" r="2" fill="#2ecc71">
+          <animate attributeName="cy" dur="1.5s" values="-5;40" repeatCount="indefinite"/>
+          <animate attributeName="opacity" dur="1.5s" values="1;0" repeatCount="indefinite"/>
+        </circle>
+        <circle cx="70" cy="-15" r="2" fill="#e74c3c">
+          <animate attributeName="cy" dur="2.5s" values="-15;40" repeatCount="indefinite"/>
+          <animate attributeName="opacity" dur="2.5s" values="1;0" repeatCount="indefinite"/>
+        </circle>
+        
+        <!-- Cauldron body -->
+        <path d="M20,40 C20,20 80,20 80,40 L85,70 C85,80 15,80 15,70 Z" fill="#4a4a4a">
+          <animate attributeName="d" 
+                   dur="1s" 
+                   repeatCount="indefinite"
+                   values="M20,40 C20,20 80,20 80,40 L85,70 C85,80 15,80 15,70 Z;
+                          M20,42 C20,22 80,22 80,42 L85,72 C85,82 15,82 15,72 Z;
+                          M20,40 C20,20 80,20 80,40 L85,70 C85,80 15,80 15,70 Z"/>
+        </path>
+        
+        <!-- Purple potion liquid with better animation -->
+        <path d="M25,45 C25,35 75,35 75,45" fill="none" stroke="#9b59b6" stroke-width="4" opacity="0.8">
+          <animate attributeName="d" 
+                   dur="0.8s" 
+                   repeatCount="indefinite"
+                   values="M25,45 C35,42 65,42 75,45;
+                          M25,43 C35,46 65,46 75,43;
+                          M25,45 C35,42 65,42 75,45"/>
+        </path>
+      </svg>
+    </div>
+    <div class="loading-text">Consultando los antiguos grimorios...</div>
+  `;
+  document.body.appendChild(loadingScreen);
+
+  // Generate random recipe
+  setTimeout(() => {
+    const ingredients = getRandomIngredients();
+    const difficulties = ['Simple', 'Moderado', 'Avanzado'];
+    const effects = [
+      'Brilla con destellos mágicos',
+      'Emite un suave resplandor',
+      'Las burbujas flotan mágicamente',
+      'Cambia de color con la luz',
+      'Evoca brisas místicas'
+    ];
+    
+    const newRecipe = {
+      name: `Brebaje ${Math.random().toString(36).substring(7)}`,
+      ingredients: ingredients,
+      instructions: `Combinar ${ingredients[0]} con ${ingredients[1]} en una copa helada. Agregar ${ingredients[2]} y remover suavemente. Decorar con ${ingredients[3]}.`,
+      difficulty: difficulties[Math.floor(Math.random() * difficulties.length)],
+      effect: effects[Math.floor(Math.random() * effects.length)]
+    };
+
+    // Add recipe to collection
+    recipes.push(newRecipe);
+    
+    // Remove loading screen and show new recipe
+    document.body.removeChild(loadingScreen);
+    displayRecipes();
+    showRecipeModal(newRecipe);
+  }, 3000);
+}
+</script>
+
+</body>
+</html>
