@@ -1,5 +1,6 @@
 <html><head><base href="/">
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Grimorio de Brebajes Místicos</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=MedievalSharp&family=Crimson+Pro:wght@400;600&family=UnifrakturMaguntia&display=swap');
@@ -33,8 +34,99 @@
       0 0 50px rgba(139, 69, 19, 0.5),
       inset 0 0 30px rgba(139, 69, 19, 0.4),
       inset 0 0 100px rgba(58, 29, 8, 0.2);
-    padding: 60px;
-    position: relative;
+    padding: 30px;  /* Reduced padding for mobile */
+  }
+
+  @media (max-width: 768px) {
+    body {
+      padding: 10px;  /* Reduce body padding on mobile */
+    }
+
+    .grimoire {
+      padding: 20px;
+    }
+
+    h1 {
+      font-size: 2.5em;  /* Smaller title on mobile */
+    }
+
+    .search-container {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .search-container input {
+      width: 100%;
+      margin-right: 0;
+    }
+
+    .search-container button {
+      width: 100%;
+    }
+
+    .recipe-container {
+      grid-template-columns: 1fr;  /* Single column on mobile */
+      gap: 20px;
+    }
+
+    .recipe {
+      padding: 20px;
+    }
+
+    .navigation-menu {
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .navigation-menu button {
+      width: 100%;
+    }
+
+    .filter-tags {
+      gap: 5px;
+    }
+
+    .filter-tag {
+      font-size: 0.9em;
+      padding: 6px 12px;
+    }
+
+    .sorting-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .sorting-container select {
+      width: 100%;
+      max-width: 300px;
+    }
+
+    /* Modal adjustments for mobile */
+    .modal-content {
+      width: 95%;
+      padding: 20px;
+      margin: 10px;
+    }
+
+    /* Adjust input and form elements for mobile */
+    input, 
+    select, 
+    textarea {
+      width: 100%;
+      font-size: 16px; /* Prevent zoom on focus in iOS */
+    }
+
+    .ingredient-input {
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .create-form {
+      padding: 10px;
+    }
   }
 
   h1 {
@@ -1287,3 +1379,5 @@ function requestAIRecommendation() {
 
 </body>
 </html>
+                       
+    
